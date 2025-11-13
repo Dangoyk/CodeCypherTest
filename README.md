@@ -4,11 +4,12 @@ A comprehensive web application for practicing encryption and decryption with 20
 
 ## Features
 
-- **20 Different Ciphers**: Practice with a wide variety of classical and modern ciphers
-- **Encrypt/Decrypt**: Switch between encryption and decryption modes
-- **Answer Checking**: Verify your solutions with the built-in answer checker
+- **Home Screen**: Choose from 20 different ciphers to practice
+- **Practice Mode**: Unlimited practice questions with random keys and texts
+- **Answer Checking**: Verify your solutions instantly
+- **Statistics Tracking**: Track your progress, solved count, and current streak
+- **Unlimited Questions**: Practice as long as you want with new questions generated each time
 - **Modern UI**: Beautiful, responsive design with gradient backgrounds
-- **Real-time Processing**: Instant encryption/decryption results
 
 ## Supported Ciphers
 
@@ -36,12 +37,16 @@ A comprehensive web application for practicing encryption and decryption with 20
 ## Usage
 
 1. Open `index.html` in a web browser
-2. Select a cipher from the dropdown
-3. Enter the key (if required) - see hints for format
-4. Choose Encrypt or Decrypt mode
-5. Enter your text
-6. Click "Process" to see the result
-7. Optionally, enter an expected answer and click "Check Answer" to verify
+2. **Home Screen**: Click on any cipher card to start practicing
+3. **Practice Mode**: 
+   - You'll be given a random question (encrypt or decrypt)
+   - The question will show you the key and either plaintext (for encryption) or ciphertext (for decryption)
+   - Enter your answer in the text box
+   - Click "Check Answer" to verify your solution
+   - If correct, click "Next Question" to continue practicing
+   - Practice unlimited questions - each one is randomly generated
+4. **Statistics**: Track your progress in the statistics panel on the right
+5. **Navigation**: Click "Back to Home" to return to the cipher selection screen
 
 ## Key Formats
 

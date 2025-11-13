@@ -7,86 +7,168 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🔐 Cipher Practice Tool</h1>
-            <p>Practice encryption and decryption with various ciphers</p>
-        </header>
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen active">
+        <div class="container">
+            <header>
+                <h1>🔐 Cipher Practice Tool</h1>
+                <p>Choose a cipher to practice</p>
+            </header>
 
-        <div class="main-content">
-            <div class="controls-panel">
-                <div class="form-group">
-                    <label for="cipher-select">Select Cipher:</label>
-                    <select id="cipher-select">
-                        <option value="atbash">AtBash</option>
-                        <option value="caesar">Caesar</option>
-                        <option value="aristocrat">Aristocrat</option>
-                        <option value="aristocrat-misspelled">Aristocrat Misspelled</option>
-                        <option value="patristocrat">Patristocrat</option>
-                        <option value="xenocrypt">Xenocrypt</option>
-                        <option value="hill-2x2">Hill 2x2</option>
-                        <option value="hill-3x3">Hill 3x3</option>
-                        <option value="affine">Affine</option>
-                        <option value="baconian">Baconian</option>
-                        <option value="fractionated-morse">Fractionated Morse</option>
-                        <option value="porta">Porta</option>
-                        <option value="dancing-men">Dancing Men</option>
-                        <option value="rsa">RSA</option>
-                        <option value="running-key">Running Key</option>
-                        <option value="railfence">Railfence</option>
-                        <option value="cryptarithm">Cryptarithm</option>
-                        <option value="complete-columnar">Complete Columnar</option>
-                        <option value="pollux">Pollux</option>
-                        <option value="morbit">Morbit</option>
-                    </select>
+            <div class="cipher-grid">
+                <div class="cipher-card" data-cipher="atbash">
+                    <h3>AtBash</h3>
+                    <p>Mirror alphabet substitution</p>
                 </div>
-
-                <div class="form-group" id="key-group">
-                    <label for="key-input">Key:</label>
-                    <input type="text" id="key-input" placeholder="Enter key (varies by cipher)">
-                    <small id="key-hint"></small>
+                <div class="cipher-card" data-cipher="caesar">
+                    <h3>Caesar</h3>
+                    <p>Shift cipher</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="mode-select">Mode:</label>
-                    <select id="mode-select">
-                        <option value="encrypt">Encrypt</option>
-                        <option value="decrypt">Decrypt</option>
-                    </select>
+                <div class="cipher-card" data-cipher="aristocrat">
+                    <h3>Aristocrat</h3>
+                    <p>Monoalphabetic substitution</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="text-input">Text:</label>
-                    <textarea id="text-input" rows="5" placeholder="Enter text to encrypt/decrypt"></textarea>
+                <div class="cipher-card" data-cipher="aristocrat-misspelled">
+                    <h3>Aristocrat Misspelled</h3>
+                    <p>Monoalphabetic with typos</p>
                 </div>
-
-                <div class="button-group">
-                    <button id="process-btn">Process</button>
-                    <button id="check-btn">Check Answer</button>
-                    <button id="clear-btn">Clear</button>
+                <div class="cipher-card" data-cipher="patristocrat">
+                    <h3>Patristocrat</h3>
+                    <p>Substitution with word breaks</p>
                 </div>
-
-                <div class="form-group" id="answer-group" style="display: none;">
-                    <label for="answer-input">Expected Answer:</label>
-                    <input type="text" id="answer-input" placeholder="Enter expected result for checking">
+                <div class="cipher-card" data-cipher="xenocrypt">
+                    <h3>Xenocrypt</h3>
+                    <p>Spanish substitution</p>
                 </div>
-            </div>
-
-            <div class="result-panel">
-                <h2>Result:</h2>
-                <div id="result-output" class="result-box"></div>
-                <div id="check-result" class="check-result"></div>
+                <div class="cipher-card" data-cipher="hill-2x2">
+                    <h3>Hill 2x2</h3>
+                    <p>2x2 matrix cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="hill-3x3">
+                    <h3>Hill 3x3</h3>
+                    <p>3x3 matrix cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="affine">
+                    <h3>Affine</h3>
+                    <p>Linear cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="baconian">
+                    <h3>Baconian</h3>
+                    <p>Binary encoding</p>
+                </div>
+                <div class="cipher-card" data-cipher="fractionated-morse">
+                    <h3>Fractionated Morse</h3>
+                    <p>Morse code fractionation</p>
+                </div>
+                <div class="cipher-card" data-cipher="porta">
+                    <h3>Porta</h3>
+                    <p>Digraphic cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="dancing-men">
+                    <h3>Dancing Men</h3>
+                    <p>Visual cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="rsa">
+                    <h3>RSA</h3>
+                    <p>Public-key cipher</p>
+                </div>
+                <div class="cipher-card" data-cipher="running-key">
+                    <h3>Running Key</h3>
+                    <p>Vigenère variant</p>
+                </div>
+                <div class="cipher-card" data-cipher="railfence">
+                    <h3>Railfence</h3>
+                    <p>Zigzag transposition</p>
+                </div>
+                <div class="cipher-card" data-cipher="cryptarithm">
+                    <h3>Cryptarithm</h3>
+                    <p>Alphametic puzzle</p>
+                </div>
+                <div class="cipher-card" data-cipher="complete-columnar">
+                    <h3>Complete Columnar</h3>
+                    <p>Columnar transposition</p>
+                </div>
+                <div class="cipher-card" data-cipher="pollux">
+                    <h3>Pollux</h3>
+                    <p>Morse to numbers</p>
+                </div>
+                <div class="cipher-card" data-cipher="morbit">
+                    <h3>Morbit</h3>
+                    <p>Morse pairs to digits</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="info-panel">
-            <h3>Cipher Information</h3>
-            <div id="cipher-info"></div>
+    <!-- Practice Screen -->
+    <div id="practice-screen" class="screen">
+        <div class="container">
+            <header>
+                <h1 id="practice-cipher-name">🔐 Practice</h1>
+                <button id="back-btn" class="back-button">← Back to Home</button>
+            </header>
+
+            <div class="practice-content">
+                <div class="question-panel">
+                    <div class="question-header">
+                        <h2>Question</h2>
+                        <span class="question-number">Question #<span id="question-num">1</span></span>
+                    </div>
+                    
+                    <div class="question-info">
+                        <div id="question-type" class="question-type"></div>
+                        <div id="question-description" class="question-description"></div>
+                    </div>
+
+                    <div class="given-info">
+                        <div class="info-box" id="key-box" style="display: none;">
+                            <label>Key:</label>
+                            <div class="info-value" id="given-key"></div>
+                        </div>
+                        <div class="info-box" id="plaintext-box" style="display: none;">
+                            <label>Plaintext:</label>
+                            <div class="info-value" id="given-plaintext"></div>
+                        </div>
+                        <div class="info-box" id="ciphertext-box" style="display: none;">
+                            <label>Ciphertext:</label>
+                            <div class="info-value" id="given-ciphertext"></div>
+                        </div>
+                    </div>
+
+                    <div class="answer-section">
+                        <label for="user-answer">Your Answer:</label>
+                        <textarea id="user-answer" rows="4" placeholder="Enter your answer here..."></textarea>
+                    </div>
+
+                    <div class="button-group-practice">
+                        <button id="check-answer-btn" class="btn-check">Check Answer</button>
+                        <button id="next-question-btn" class="btn-next" style="display: none;">Next Question →</button>
+                    </div>
+
+                    <div id="answer-feedback" class="answer-feedback"></div>
+                </div>
+
+                <div class="stats-panel">
+                    <h3>Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Questions Solved:</span>
+                        <span class="stat-value" id="solved-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Current Streak:</span>
+                        <span class="stat-value" id="streak-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Questions:</span>
+                        <span class="stat-value" id="total-count">0</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="ciphers.js"></script>
+    <script src="question-generator.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
-

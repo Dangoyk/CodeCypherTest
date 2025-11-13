@@ -147,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         solvingProcess.classList.remove('active');
         solvingProcess.innerHTML = '';
         nextQuestionBtn.classList.add('hidden');
+        nextQuestionBtn.style.display = 'none'; // Double ensure it's hidden
         checkAnswerBtn.disabled = false;
     }
 
@@ -178,19 +179,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (userClean === correctClean) {
             stats.solved++;
             stats.streak++;
-            answerFeedback.textContent = '✓ Correct! Well done!';
+            answerFeedback.textContent = '✓ Correct! Well done! Click "Next Question" to continue.';
             answerFeedback.className = 'answer-feedback correct';
             answerFeedback.style.display = 'block';
             checkAnswerBtn.disabled = true;
         } else {
             stats.streak = 0;
-            answerFeedback.textContent = `✗ Incorrect. The correct answer is: ${correctAnswer}`;
+            answerFeedback.textContent = `✗ Incorrect. The correct answer is: ${correctAnswer}. Click "Next Question" to try another.`;
             answerFeedback.className = 'answer-feedback incorrect';
             answerFeedback.style.display = 'block';
         }
         
         // Always show next question button after checking
         nextQuestionBtn.classList.remove('hidden');
+        // Clear inline display style to let CSS flex handle it
+        nextQuestionBtn.style.display = '';
 
         updateStats();
     }

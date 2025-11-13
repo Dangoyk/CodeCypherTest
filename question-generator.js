@@ -425,8 +425,8 @@ class QuestionGenerator {
         return {
             question,
             key,
-            plaintext: mode === 'encrypt' ? plaintext : null,
-            ciphertext: mode === 'decrypt' ? ciphertext : null,
+            plaintext: plaintext, // Store both for solving process
+            ciphertext: ciphertext, // Store both for solving process
             answer: answer.toUpperCase().replace(/\s+/g, ' ').trim(),
             mode
         };

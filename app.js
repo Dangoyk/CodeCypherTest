@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkAnswerBtn = document.getElementById('check-answer-btn');
     const nextQuestionBtn = document.getElementById('next-question-btn');
     const answerFeedback = document.getElementById('answer-feedback');
+    const solvingProcess = document.getElementById('solving-process');
     const solvedCount = document.getElementById('solved-count');
     const streakCount = document.getElementById('streak-count');
     const totalCount = document.getElementById('total-count');
@@ -134,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
         userAnswer.value = '';
         answerFeedback.className = 'answer-feedback';
         answerFeedback.style.display = 'none';
+        solvingProcess.classList.remove('active');
+        solvingProcess.innerHTML = '';
         nextQuestionBtn.style.display = 'none';
         checkAnswerBtn.disabled = false;
     }
@@ -146,6 +149,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const correctAnswer = currentQuestion.answer.trim().toUpperCase().replace(/\s+/g, ' ');
 
         stats.total++;
+
+        // Generate and show solving process
+        const process = SolvingProcess.generateProcess(
+            currentCipher,
+            currentQuestion.question,
+            currentQuestion.key,
+            currentQuestion.plaintext || '',
+            currentQuestion.ciphertext || '',
+            currentQuestion.mode
+        );
+        solvingProcess.innerHTML = process;
+        solvingProcess.classList.add('active');
 
         // Compare answers (case-insensitive, normalize spaces)
         const userClean = userAnswerText.replace(/\s+/g, '');

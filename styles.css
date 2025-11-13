@@ -293,6 +293,75 @@ header p {
     display: block;
 }
 
+.solving-process {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    border: 2px solid #667eea;
+    display: none;
+}
+
+.solving-process.active {
+    display: block;
+}
+
+.process-step {
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.process-step strong {
+    color: #667eea;
+    font-size: 1.1em;
+}
+
+.process-mapping {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.8;
+    border: 1px solid #e0e0e0;
+}
+
+.process-chars {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95em;
+    line-height: 1.8;
+    border: 1px solid #e0e0e0;
+    word-break: break-all;
+}
+
+.process-matrix {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.process-result {
+    margin-top: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1em;
+    text-align: center;
+}
+
 .stats-panel {
     background: #f8f9fa;
     padding: 25px;

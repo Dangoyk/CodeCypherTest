@@ -194,25 +194,44 @@ class SolvingProcess {
         let process = '<div class="process-step"><strong>Hill 2x2 Cipher Process:</strong></div>';
         process += '<div class="process-step">Matrix Key:</div>';
         process += `<div class="process-matrix">[${matrix[0][0]} ${matrix[0][1]}]<br>[${matrix[1][0]} ${matrix[1][1]}]</div>`;
+        process += '<div class="process-step">Formula: [C₁ C₂] = [P₁ P₂] × Matrix (mod 26)</div>';
         
         if (mode === 'encrypt') {
             process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
             const text = plaintext.toUpperCase().replace(/[^A-Z]/g, '');
             for (let i = 0; i < text.length; i += 2) {
+                const char1 = text[i];
+                const char2 = text[i + 1] || 'X';
                 const pair = [
-                    text.charCodeAt(i) - 65,
-                    text.charCodeAt(i + 1) - 65
+                    char1.charCodeAt(0) - 65,
+                    char2.charCodeAt(0) - 65
                 ];
+                const calc1 = matrix[0][0] * pair[0] + matrix[0][1] * pair[1];
+                const calc2 = matrix[1][0] * pair[0] + matrix[1][1] * pair[1];
                 const result = [
-                    (matrix[0][0] * pair[0] + matrix[0][1] * pair[1]) % 26,
-                    (matrix[1][0] * pair[0] + matrix[1][1] * pair[1]) % 26
+                    calc1 % 26,
+                    calc2 % 26
                 ];
-                process += `<div class="process-step">[${matrix[0][0]} ${matrix[0][1]}] [${pair[0]}] = [${result[0]}] mod 26 → ${String.fromCharCode(65 + result[0])}</div>`;
-                process += `<div class="process-step">[${matrix[1][0]} ${matrix[1][1]}] [${pair[1]}] = [${result[1]}] mod 26 → ${String.fromCharCode(65 + result[1])}</div>`;
+                process += `<div class="process-step"><strong>Pair: ${char1}${char2}</strong></div>`;
+                process += `<div class="process-chars">${char1} = ${pair[0]}, ${char2} = ${pair[1]}</div>`;
+                process += `<div class="process-chars">C₁ = (${matrix[0][0]} × ${pair[0]} + ${matrix[0][1]} × ${pair[1]}) mod 26 = ${calc1} mod 26 = ${result[0]} → ${String.fromCharCode(65 + result[0])}</div>`;
+                process += `<div class="process-chars">C₂ = (${matrix[1][0]} × ${pair[0]} + ${matrix[1][1]} × ${pair[1]}) mod 26 = ${calc2} mod 26 = ${result[1]} → ${String.fromCharCode(65 + result[1])}</div>`;
             }
             process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
         } else {
-            process += '<div class="process-step">Decryption requires matrix inversion (complex).</div>';
+            process += '<div class="process-step"><strong>Decrypting:</strong></div>';
+            process += '<div class="process-step">Step 1: Calculate determinant</div>';
+            const det = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0] + 26) % 26;
+            process += `<div class="process-chars">det = (${matrix[0][0]} × ${matrix[1][1]} - ${matrix[0][1]} × ${matrix[1][0]}) mod 26 = ${det}</div>`;
+            process += '<div class="process-step">Step 2: Find modular inverse of determinant</div>';
+            const invDet = this.modInverse(det, 26);
+            process += `<div class="process-chars">det⁻¹ = ${invDet}</div>`;
+            process += '<div class="process-step">Step 3: Calculate inverse matrix</div>';
+            const invMatrix = [
+                [(matrix[1][1] * invDet) % 26, (-matrix[0][1] * invDet + 26) % 26],
+                [(-matrix[1][0] * invDet + 26) % 26, (matrix[0][0] * invDet) % 26]
+            ];
+            process += `<div class="process-matrix">Inverse Matrix:<br>[${invMatrix[0][0]} ${invMatrix[0][1]}]<br>[${invMatrix[1][0]} ${invMatrix[1][1]}]</div>`;
             process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
         }
         return process;
@@ -223,8 +242,39 @@ class SolvingProcess {
         let process = '<div class="process-step"><strong>Hill 3x3 Cipher Process:</strong></div>';
         process += '<div class="process-step">Matrix Key (3x3):</div>';
         process += `<div class="process-matrix">[${keyParts[0]} ${keyParts[1]} ${keyParts[2]}]<br>[${keyParts[3]} ${keyParts[4]} ${keyParts[5]}]<br>[${keyParts[6]} ${keyParts[7]} ${keyParts[8]}]</div>`;
-        process += '<div class="process-step">Process: Multiply 3-letter blocks by the matrix mod 26</div>';
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
+        process += '<div class="process-step">Formula: [C₁ C₂ C₃] = [P₁ P₂ P₃] × Matrix (mod 26)</div>';
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            const text = plaintext.toUpperCase().replace(/[^A-Z]/g, '');
+            for (let i = 0; i < text.length; i += 3) {
+                const char1 = text[i] || 'X';
+                const char2 = text[i + 1] || 'X';
+                const char3 = text[i + 2] || 'X';
+                const triple = [
+                    char1.charCodeAt(0) - 65,
+                    char2.charCodeAt(0) - 65,
+                    char3.charCodeAt(0) - 65
+                ];
+                const calc1 = keyParts[0] * triple[0] + keyParts[1] * triple[1] + keyParts[2] * triple[2];
+                const calc2 = keyParts[3] * triple[0] + keyParts[4] * triple[1] + keyParts[5] * triple[2];
+                const calc3 = keyParts[6] * triple[0] + keyParts[7] * triple[1] + keyParts[8] * triple[2];
+                const result = [
+                    calc1 % 26,
+                    calc2 % 26,
+                    calc3 % 26
+                ];
+                process += `<div class="process-step"><strong>Triple: ${char1}${char2}${char3}</strong></div>`;
+                process += `<div class="process-chars">${char1} = ${triple[0]}, ${char2} = ${triple[1]}, ${char3} = ${triple[2]}</div>`;
+                process += `<div class="process-chars">C₁ = (${keyParts[0]}×${triple[0]} + ${keyParts[1]}×${triple[1]} + ${keyParts[2]}×${triple[2]}) mod 26 = ${calc1} mod 26 = ${result[0]} → ${String.fromCharCode(65 + result[0])}</div>`;
+                process += `<div class="process-chars">C₂ = (${keyParts[3]}×${triple[0]} + ${keyParts[4]}×${triple[1]} + ${keyParts[5]}×${triple[2]}) mod 26 = ${calc2} mod 26 = ${result[1]} → ${String.fromCharCode(65 + result[1])}</div>`;
+                process += `<div class="process-chars">C₃ = (${keyParts[6]}×${triple[0]} + ${keyParts[7]}×${triple[1]} + ${keyParts[8]}×${triple[2]}) mod 26 = ${calc3} mod 26 = ${result[2]} → ${String.fromCharCode(65 + result[2])}</div>`;
+            }
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
+        } else {
+            process += '<div class="process-step">Decryption requires 3x3 matrix inversion (complex).</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
+        }
         return process;
     }
 
@@ -314,18 +364,73 @@ class SolvingProcess {
     }
 
     static fractionatedMorseProcess(key, plaintext, ciphertext, mode) {
+        const morseMap = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+            'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+            'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+            'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+            'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+            'Z': '--..'
+        };
+        
         let process = '<div class="process-step"><strong>Fractionated Morse Cipher Process:</strong></div>';
-        process += '<div class="process-step">1. Convert text to Morse code</div>';
-        process += '<div class="process-step">2. Fractionate into trigrams</div>';
-        process += '<div class="process-step">3. Substitute using key</div>';
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
+        process += `<div class="process-step">Key: <strong>${key}</strong></div>`;
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Convert to Morse code</div>';
+            process += '<div class="process-chars">';
+            let morse = '';
+            for (let i = 0; i < plaintext.length; i++) {
+                const char = plaintext[i].toUpperCase();
+                if (morseMap[char]) {
+                    process += `${char} → ${morseMap[char]}<br>`;
+                    morse += morseMap[char] + 'x';
+                }
+            }
+            process += '</div>';
+            process += `<div class="process-step">Morse code: ${morse}</div>`;
+            process += '<div class="process-step">Step 2: Group into trigrams (3 symbols each)</div>';
+            process += '<div class="process-step">Step 3: Map each trigram to a letter using the key</div>';
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
+        } else {
+            process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
+            process += '<div class="process-step">Reverse the substitution and convert Morse back to letters</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
+        }
         return process;
     }
 
     static portaProcess(key, plaintext, ciphertext, mode) {
         let process = '<div class="process-step"><strong>Porta Cipher Process:</strong></div>';
         process += `<div class="process-step">Key: <strong>${key}</strong></div>`;
-        process += '<div class="process-step">Uses a digraphic table based on the key letter</div>';
+        process += '<div class="process-step">Each key letter determines which row of the Porta table to use</div>';
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            process += '<div class="process-chars">';
+            const keyUpper = key.toUpperCase();
+            for (let i = 0; i < plaintext.length; i++) {
+                const char = plaintext[i].toUpperCase();
+                if (char >= 'A' && char <= 'Z') {
+                    const keyChar = keyUpper[i % keyUpper.length];
+                    process += `${char} (key: ${keyChar}) → [lookup in Porta table] `;
+                }
+            }
+            process += '</div>';
+        } else {
+            process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
+            process += '<div class="process-chars">';
+            const keyUpper = key.toUpperCase();
+            for (let i = 0; i < ciphertext.length; i++) {
+                const char = ciphertext[i].toUpperCase();
+                if (char >= 'A' && char <= 'Z') {
+                    const keyChar = keyUpper[i % keyUpper.length];
+                    process += `${char} (key: ${keyChar}) → [reverse lookup] `;
+                }
+            }
+            process += '</div>';
+        }
         process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
         return process;
     }
@@ -411,42 +516,39 @@ class SolvingProcess {
         const rails = parseInt(key) || 3;
         let process = '<div class="process-step"><strong>Railfence Cipher Process:</strong></div>';
         process += `<div class="process-step">Number of rails: <strong>${rails}</strong></div>`;
-        process += '<div class="process-step">Text is written in a zigzag pattern across the rails</div>';
+        process += '<div class="process-step">Text is written in a zigzag pattern, then read row by row</div>';
         
         if (mode === 'encrypt') {
             process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
-            process += '<div class="process-step">Writing pattern:</div>';
-            // Show a simple visualization
-            const text = plaintext.replace(/\s/g, '');
-            for (let r = 0; r < rails; r++) {
-                let railText = '';
-                let pos = r;
-                let direction = 1;
-                let row = Array(text.length).fill(' ');
-                for (let i = 0; i < text.length; i++) {
-                    if (i === pos) {
-                        row[i] = text[i];
-                        pos += (rails - 1) * 2;
-                    }
+            const text = plaintext.replace(/\s/g, '').toUpperCase();
+            process += '<div class="process-step">Step 1: Write text in zigzag pattern</div>';
+            
+            // Create rail visualization
+            const railArrays = Array(rails).fill(null).map(() => []);
+            let rail = 0;
+            let direction = 1;
+            
+            for (let i = 0; i < text.length; i++) {
+                railArrays[rail].push(text[i]);
+                rail += direction;
+                if (rail === 0 || rail === rails - 1) {
+                    direction = -direction;
                 }
-                // Simplified display
-                process += `<div class="process-step">Rail ${r + 1}: ${text.split('').filter((_, i) => {
-                    let p = r;
-                    let d = 1;
-                    let result = [];
-                    for (let j = 0; j < text.length; j++) {
-                        if (j === p) result.push(text[j]);
-                        p += (rails - 1) * 2 * d;
-                        if (p >= text.length || p < 0) d = -d;
-                    }
-                    return result;
-                }).join('')}</div>`;
             }
+            
+            for (let r = 0; r < rails; r++) {
+                process += `<div class="process-chars">Rail ${r + 1}: ${railArrays[r].join('')}</div>`;
+            }
+            
+            process += '<div class="process-step">Step 2: Read across all rails</div>';
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
         } else {
             process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
-            process += '<div class="process-step">Reconstructing the zigzag pattern</div>';
+            process += '<div class="process-step">Step 1: Determine pattern length and distribute letters to rails</div>';
+            process += '<div class="process-step">Step 2: Reconstruct zigzag pattern</div>';
+            process += '<div class="process-step">Step 3: Read in zigzag order</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
         }
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
         return process;
     }
 
@@ -460,28 +562,131 @@ class SolvingProcess {
     static columnarProcess(key, plaintext, ciphertext, mode) {
         let process = '<div class="process-step"><strong>Complete Columnar Transposition Process:</strong></div>';
         process += `<div class="process-step">Key: <strong>${key}</strong></div>`;
-        process += '<div class="process-step">1. Write text in rows</div>';
-        process += '<div class="process-step">2. Sort columns by key order</div>';
-        process += '<div class="process-step">3. Read down columns</div>';
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
+        const keyUpper = key.toUpperCase().replace(/[^A-Z]/g, '');
+        const cols = keyUpper.length;
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            const text = plaintext.replace(/\s/g, '').toUpperCase();
+            const rows = Math.ceil(text.length / cols);
+            process += `<div class="process-step">Step 1: Write text in ${rows} rows × ${cols} columns</div>`;
+            
+            // Show key order
+            const keyOrder = keyUpper.split('').map((char, idx) => ({
+                char,
+                idx,
+                order: char.charCodeAt(0) - 65
+            })).sort((a, b) => {
+                if (a.order !== b.order) return a.order - b.order;
+                return a.idx - b.idx;
+            });
+            
+            process += '<div class="process-step">Step 2: Sort columns by alphabetical order of key letters</div>';
+            process += '<div class="process-chars">';
+            for (let i = 0; i < keyOrder.length; i++) {
+                process += `Column ${keyOrder[i].idx + 1} (${keyOrder[i].char}) → Position ${i + 1}<br>`;
+            }
+            process += '</div>';
+            process += '<div class="process-step">Step 3: Read down columns in sorted order</div>';
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
+        } else {
+            process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Determine column order from key</div>';
+            process += '<div class="process-step">Step 2: Distribute ciphertext into columns</div>';
+            process += '<div class="process-step">Step 3: Rearrange columns to original order</div>';
+            process += '<div class="process-step">Step 4: Read across rows</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
+        }
         return process;
     }
 
     static polluxProcess(plaintext, ciphertext, mode) {
+        const morseMap = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+            'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+            'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+            'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+            'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+            'Z': '--..'
+        };
+        
         let process = '<div class="process-step"><strong>Pollux Cipher Process:</strong></div>';
-        process += '<div class="process-step">1. Convert to Morse code</div>';
-        process += '<div class="process-step">2. Map: . = 1, - = 2, separator = 0</div>';
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
+        process += '<div class="process-step">Mapping: . = 1, - = 2, letter separator = 0</div>';
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Convert each letter to Morse code</div>';
+            process += '<div class="process-chars">';
+            let morse = '';
+            for (let i = 0; i < plaintext.length; i++) {
+                const char = plaintext[i].toUpperCase();
+                if (morseMap[char]) {
+                    process += `${char} → ${morseMap[char]}<br>`;
+                    morse += morseMap[char] + 'x';
+                }
+            }
+            process += '</div>';
+            process += '<div class="process-step">Step 2: Convert Morse to numbers</div>';
+            process += '<div class="process-chars">';
+            for (let i = 0; i < morse.length; i++) {
+                const symbol = morse[i];
+                if (symbol === '.') process += '. → 1 ';
+                else if (symbol === '-') process += '- → 2 ';
+                else if (symbol === 'x') process += 'x → 0 ';
+            }
+            process += '</div>';
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
+        } else {
+            process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Convert numbers back to Morse</div>';
+            process += '<div class="process-chars">1 → ., 2 → -, 0 → separator</div>';
+            process += '<div class="process-step">Step 2: Convert Morse code back to letters</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
+        }
         return process;
     }
 
     static morbitProcess(key, plaintext, ciphertext, mode) {
+        const morseMap = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.',
+            'F': '..-.', 'G': '--.', 'H': '....', 'I': '..', 'J': '.---',
+            'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---',
+            'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-',
+            'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--',
+            'Z': '--..'
+        };
+        
+        const pairs = ['..', '.-', '.x', '-.', '--', '-x', 'x.', 'x-', 'xx'];
+        
         let process = '<div class="process-step"><strong>Morbit Cipher Process:</strong></div>';
-        process += `<div class="process-step">Key: <strong>${key}</strong> (9 digits for 9 Morse pairs)</div>`;
-        process += '<div class="process-step">1. Convert to Morse code</div>';
-        process += '<div class="process-step">2. Group into pairs</div>';
-        process += '<div class="process-step">3. Map pairs to digits using key</div>';
-        process += `<div class="process-result">Result: <strong>${mode === 'encrypt' ? ciphertext : plaintext}</strong></div>`;
+        process += `<div class="process-step">Key: <strong>${key}</strong></div>`;
+        process += '<div class="process-step">Key mapping (9 possible Morse pairs):</div>';
+        process += '<div class="process-chars">';
+        for (let i = 0; i < 9; i++) {
+            process += `${pairs[i]} → ${key[i]}<br>`;
+        }
+        process += '</div>';
+        
+        if (mode === 'encrypt') {
+            process += `<div class="process-step"><strong>Encrypting "${plaintext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Convert to Morse code</div>';
+            let morse = '';
+            for (let i = 0; i < plaintext.length; i++) {
+                const char = plaintext[i].toUpperCase();
+                if (morseMap[char]) {
+                    morse += morseMap[char] + 'x';
+                }
+            }
+            process += `<div class="process-chars">Morse: ${morse}</div>`;
+            process += '<div class="process-step">Step 2: Group into pairs and map to digits</div>';
+            process += `<div class="process-result">Result: <strong>${ciphertext}</strong></div>`;
+        } else {
+            process += `<div class="process-step"><strong>Decrypting "${ciphertext}":</strong></div>`;
+            process += '<div class="process-step">Step 1: Map digits back to Morse pairs</div>';
+            process += '<div class="process-step">Step 2: Reconstruct Morse code</div>';
+            process += '<div class="process-step">Step 3: Convert Morse to letters</div>';
+            process += `<div class="process-result">Result: <strong>${plaintext}</strong></div>`;
+        }
         return process;
     }
 

@@ -303,17 +303,23 @@ header p {
     display: block;
 }
 
-.solving-process {
+#solving-process-container {
     margin-top: 25px;
+}
+
+.solving-process-header {
+    color: #667eea;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+}
+
+.solving-process {
     padding: 20px;
     background: #f0f4ff;
     border-radius: 10px;
     border: 2px solid #667eea;
-    display: none;
-}
-
-.solving-process.active {
-    display: block;
 }
 
 .process-step {

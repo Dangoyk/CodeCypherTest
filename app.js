@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextQuestionBtn = document.getElementById('next-question-btn');
     const answerFeedback = document.getElementById('answer-feedback');
     const solvingProcess = document.getElementById('solving-process');
+    const solvingProcessContainer = document.getElementById('solving-process-container');
     const solvedCount = document.getElementById('solved-count');
     const streakCount = document.getElementById('streak-count');
     const totalCount = document.getElementById('total-count');
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userAnswer.value = '';
         answerFeedback.className = 'answer-feedback';
         answerFeedback.style.display = 'none';
-        solvingProcess.classList.remove('active');
+        solvingProcessContainer.style.display = 'none';
         solvingProcess.innerHTML = '';
         nextQuestionBtn.classList.add('hidden');
         nextQuestionBtn.style.display = 'none'; // Double ensure it's hidden
@@ -170,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentQuestion.mode
         );
         solvingProcess.innerHTML = process;
-        solvingProcess.classList.add('active');
+        solvingProcessContainer.style.display = 'block';
 
         // Compare answers (case-insensitive, normalize spaces)
         const userClean = userAnswerText.replace(/\s+/g, '');

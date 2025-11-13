@@ -109,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
         questionType.textContent = currentQuestion.mode === 'encrypt' ? 'ENCRYPT' : 'DECRYPT';
         questionDescription.textContent = currentQuestion.question;
 
-        // Show/hide given information
+        // Show/hide given information based on mode
+        // For encryption: show key (if needed) and plaintext, hide ciphertext
+        // For decryption: show key (if needed) and ciphertext, hide plaintext
+        
         if (currentQuestion.key) {
             givenKey.textContent = currentQuestion.key;
             keyBox.style.display = 'block';
@@ -117,18 +120,24 @@ document.addEventListener('DOMContentLoaded', () => {
             keyBox.style.display = 'none';
         }
 
-        if (currentQuestion.plaintext) {
-            givenPlaintext.textContent = currentQuestion.plaintext;
-            plaintextBox.style.display = 'block';
+        if (currentQuestion.mode === 'encrypt') {
+            // Show plaintext, hide ciphertext (user needs to encrypt)
+            if (currentQuestion.plaintext) {
+                givenPlaintext.textContent = currentQuestion.plaintext;
+                plaintextBox.style.display = 'block';
+            } else {
+                plaintextBox.style.display = 'none';
+            }
+            ciphertextBox.style.display = 'none'; // Don't show the answer!
         } else {
-            plaintextBox.style.display = 'none';
-        }
-
-        if (currentQuestion.ciphertext) {
-            givenCiphertext.textContent = currentQuestion.ciphertext;
-            ciphertextBox.style.display = 'block';
-        } else {
-            ciphertextBox.style.display = 'none';
+            // Show ciphertext, hide plaintext (user needs to decrypt)
+            if (currentQuestion.ciphertext) {
+                givenCiphertext.textContent = currentQuestion.ciphertext;
+                ciphertextBox.style.display = 'block';
+            } else {
+                ciphertextBox.style.display = 'none';
+            }
+            plaintextBox.style.display = 'none'; // Don't show the answer!
         }
 
         // Clear previous answer and feedback

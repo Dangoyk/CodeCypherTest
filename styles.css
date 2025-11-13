@@ -239,6 +239,10 @@ header p {
     margin-bottom: 20px;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .btn-check, .btn-next {
     flex: 1;
     padding: 15px 30px;

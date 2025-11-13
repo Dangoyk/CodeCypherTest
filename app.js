@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         answerFeedback.style.display = 'none';
         solvingProcess.classList.remove('active');
         solvingProcess.innerHTML = '';
-        nextQuestionBtn.style.display = 'none';
+        nextQuestionBtn.classList.add('hidden');
         checkAnswerBtn.disabled = false;
     }
 
@@ -172,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
             answerFeedback.textContent = '✓ Correct! Well done!';
             answerFeedback.className = 'answer-feedback correct';
             answerFeedback.style.display = 'block';
-            nextQuestionBtn.style.display = 'block';
             checkAnswerBtn.disabled = true;
         } else {
             stats.streak = 0;
@@ -180,6 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
             answerFeedback.className = 'answer-feedback incorrect';
             answerFeedback.style.display = 'block';
         }
+        
+        // Always show next question button after checking
+        nextQuestionBtn.classList.remove('hidden');
 
         updateStats();
     }

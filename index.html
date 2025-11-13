@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Practice Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 Cipher Practice Tool</h1>
+            <p>Practice encryption and decryption with various ciphers</p>
+        </header>
+
+        <div class="main-content">
+            <div class="controls-panel">
+                <div class="form-group">
+                    <label for="cipher-select">Select Cipher:</label>
+                    <select id="cipher-select">
+                        <option value="atbash">AtBash</option>
+                        <option value="caesar">Caesar</option>
+                        <option value="aristocrat">Aristocrat</option>
+                        <option value="aristocrat-misspelled">Aristocrat Misspelled</option>
+                        <option value="patristocrat">Patristocrat</option>
+                        <option value="xenocrypt">Xenocrypt</option>
+                        <option value="hill-2x2">Hill 2x2</option>
+                        <option value="hill-3x3">Hill 3x3</option>
+                        <option value="affine">Affine</option>
+                        <option value="baconian">Baconian</option>
+                        <option value="fractionated-morse">Fractionated Morse</option>
+                        <option value="porta">Porta</option>
+                        <option value="dancing-men">Dancing Men</option>
+                        <option value="rsa">RSA</option>
+                        <option value="running-key">Running Key</option>
+                        <option value="railfence">Railfence</option>
+                        <option value="cryptarithm">Cryptarithm</option>
+                        <option value="complete-columnar">Complete Columnar</option>
+                        <option value="pollux">Pollux</option>
+                        <option value="morbit">Morbit</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="key-group">
+                    <label for="key-input">Key:</label>
+                    <input type="text" id="key-input" placeholder="Enter key (varies by cipher)">
+                    <small id="key-hint"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="mode-select">Mode:</label>
+                    <select id="mode-select">
+                        <option value="encrypt">Encrypt</option>
+                        <option value="decrypt">Decrypt</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="text-input">Text:</label>
+                    <textarea id="text-input" rows="5" placeholder="Enter text to encrypt/decrypt"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="process-btn">Process</button>
+                    <button id="check-btn">Check Answer</button>
+                    <button id="clear-btn">Clear</button>
+                </div>
+
+                <div class="form-group" id="answer-group" style="display: none;">
+                    <label for="answer-input">Expected Answer:</label>
+                    <input type="text" id="answer-input" placeholder="Enter expected result for checking">
+                </div>
+            </div>
+
+            <div class="result-panel">
+                <h2>Result:</h2>
+                <div id="result-output" class="result-box"></div>
+                <div id="check-result" class="check-result"></div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <h3>Cipher Information</h3>
+            <div id="cipher-info"></div>
+        </div>
+    </div>
+
+    <script src="ciphers.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
